@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="20260225-1" author="omer.alkan">
+
+        <createTable tableName="customer">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="ad" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="soyad" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="tc_no" type="VARCHAR(11)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="dogum_tarihi" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="dogum_yeri" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="adres" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
