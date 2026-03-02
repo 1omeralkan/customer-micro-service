@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="20260302-04" author="omeralkan">
+        <insert tableName="error_messages">
+            <column name="error_code" value="CUST-408"/>
+            <column name="message" value="Bu T.C. Kimlik Numarası ile kayıtlı başka bir müşteri bulunmaktadır."/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

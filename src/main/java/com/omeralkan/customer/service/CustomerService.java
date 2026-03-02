@@ -3,8 +3,10 @@ package com.omeralkan.customer.service;
 import com.omeralkan.customer.dto.CustomerResponse;
 import com.omeralkan.customer.dto.CustomerSaveRequest;
 import com.omeralkan.customer.entity.Customer;
+import com.omeralkan.customer.exception.CustomerBusinessException;
 import com.omeralkan.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +16,25 @@ import java.util.List;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private static final String CUSTOMER_NOT_FOUND_MESSAGE = "Müşteri bulunamadı veya silinmiş! ID: ";
+
+    // MİMARİ KARAR (NO HARDCODED): Hata kodlarımızı merkezi sabitler olarak tanımlıyoruz [cite: 2026-03-01].
+    private static final String ERROR_CUSTOMER_NOT_FOUND = "CUST-404";
+    private static final String ERROR_TCKN_ALREADY_EXISTS = "CUST-408";
+    private static final String ERROR_EMAIL_ALREADY_EXISTS = "CUST-409";
 
     public CustomerResponse saveCustomer(CustomerSaveRequest request) {
 
-        // 2. Request DTO -> Entity Çevirimi
+        // [ZIRH KATMANI]: Veritabanı hatası fırlatmadan önce iş kuralı denetimi yapıyoruz.
+        // 1. TCKN Benzersizlik Kontrolü
+        if (customerRepository.existsByTcNo(request.getTcNo())) {
+            throw new CustomerBusinessException(ERROR_TCKN_ALREADY_EXISTS, HttpStatus.CONFLICT);
+        }
+
+        // 2. Email Benzersizlik Kontrolü
+        if (customerRepository.existsByEmail(request.getEmail())) {
+            throw new CustomerBusinessException(ERROR_EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
+        }
+
         Customer customer = new Customer();
         customer.setAd(request.getAd());
         customer.setSoyad(request.getSoyad());
@@ -29,56 +45,37 @@ public class CustomerService {
         customer.setAdres(request.getAdres());
         customer.setTelNo(request.getTelNo());
 
-        // 3. Kayıt İşlemi (Entity veritabanına gider, ID alıp geri gelir)
         Customer savedCustomer = customerRepository.save(customer);
 
-        // 4. Entity -> Response DTO Çevirimi
-        // Veritabanından gelen ID'li nesneyi, dışarı çıkacak DTO'ya çeviriyoruz.
-        CustomerResponse response = new CustomerResponse();
-        response.setId(savedCustomer.getId());
-        response.setAd(savedCustomer.getAd());
-        response.setSoyad(savedCustomer.getSoyad());
-        response.setEmail(savedCustomer.getEmail());
-        response.setTcNo(savedCustomer.getTcNo());
-
-        return response;
+        return mapToResponse(savedCustomer);
     }
 
     public CustomerResponse getCustomerById(Long id) {
+        Customer customer = customerRepository.findByIdAndDeleteFlagFalse(id)
+                .orElseThrow(() -> new CustomerBusinessException(ERROR_CUSTOMER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        // Repository'den sadece silinmemiş kaydı getiriyoruz; yoksa RuntimeException fırlatıyoruz
-         Customer customer = customerRepository.findByIdAndDeleteFlagFalse(id)
-                 .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND_MESSAGE + id));
-
-        CustomerResponse response = new CustomerResponse();
-        response.setId(customer.getId());
-        response.setAd(customer.getAd());
-        response.setSoyad(customer.getSoyad());
-        response.setEmail(customer.getEmail());
-        response.setTcNo(customer.getTcNo());
-
-        return response;
+        return mapToResponse(customer);
     }
 
     public List<CustomerResponse> getAllCustomers() {
         List<Customer> customers = customerRepository.findAllByDeleteFlagFalse();
-        return customers.stream().map(customer -> {
-            CustomerResponse response = new CustomerResponse();
-            response.setId(customer.getId());
-            response.setAd(customer.getAd());
-            response.setSoyad(customer.getSoyad());
-            response.setEmail(customer.getEmail());
-            response.setTcNo(customer.getTcNo());
-            return response;
-        }).toList();
+        return customers.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    // --- UPDATE (GÜNCELLEME) İŞLEMİ ---
-
     public CustomerResponse updateCustomer(Long id, CustomerSaveRequest request) {
-
         Customer customer = customerRepository.findByIdAndDeleteFlagFalse(id)
-                .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND_MESSAGE + id));
+                .orElseThrow(() -> new CustomerBusinessException(ERROR_CUSTOMER_NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        // [KRİTİK]: TCKN veya Email değişiyorsa, yeni değerlerin başkasında olup olmadığını denetliyoruz.
+        if (!customer.getTcNo().equals(request.getTcNo()) && customerRepository.existsByTcNo(request.getTcNo())) {
+            throw new CustomerBusinessException(ERROR_TCKN_ALREADY_EXISTS, HttpStatus.CONFLICT);
+        }
+
+        if (!customer.getEmail().equals(request.getEmail()) && customerRepository.existsByEmail(request.getEmail())) {
+            throw new CustomerBusinessException(ERROR_EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
+        }
 
         customer.setAd(request.getAd());
         customer.setSoyad(request.getSoyad());
@@ -89,29 +86,27 @@ public class CustomerService {
         customer.setAdres(request.getAdres());
         customer.setTelNo(request.getTelNo());
 
-
         Customer updatedCustomer = customerRepository.save(customer);
 
-        CustomerResponse response = new CustomerResponse();
-        response.setId(updatedCustomer.getId());
-        response.setAd(updatedCustomer.getAd());
-        response.setSoyad(updatedCustomer.getSoyad());
-        response.setEmail(updatedCustomer.getEmail());
-        response.setTcNo(updatedCustomer.getTcNo());
-
-        return response;
+        return mapToResponse(updatedCustomer);
     }
 
-    // --- DELETE (SOFT DELETE / YUMUŞAK SİLME) İŞLEMİ ---
-
     public void deleteCustomer(Long id) {
-
         Customer customer = customerRepository.findByIdAndDeleteFlagFalse(id)
-                .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND_MESSAGE + id));
+                .orElseThrow(() -> new CustomerBusinessException(ERROR_CUSTOMER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         customer.setDeleteFlag(true);
-
         customerRepository.save(customer);
     }
 
+    // DRY PRENSİBİ: Tekrarlayan mapping (Entity -> Response) kodunu merkezi bir metoda aldık [cite: 2026-02-23].
+    private CustomerResponse mapToResponse(Customer customer) {
+        CustomerResponse response = new CustomerResponse();
+        response.setId(customer.getId());
+        response.setAd(customer.getAd());
+        response.setSoyad(customer.getSoyad());
+        response.setEmail(customer.getEmail());
+        response.setTcNo(customer.getTcNo());
+        return response;
+    }
 }

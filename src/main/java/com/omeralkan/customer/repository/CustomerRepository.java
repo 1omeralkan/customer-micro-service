@@ -10,11 +10,17 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    // 1. Sadece silinmemiş (deleteFlag = false) olan TÜM müşterileri getir.
-    // SQL Karşılığı: SELECT * FROM customer WHERE delete_flag = false
     List<Customer> findAllByDeleteFlagFalse();
 
-    // 2. Belirli bir ID'ye sahip olan VE silinmemiş olan TEK bir müşteriyi getir.
-    // SQL Karşılığı: SELECT * FROM customer WHERE id = ? AND delete_flag = false
     Optional<Customer> findByIdAndDeleteFlagFalse(Long id);
+
+    // --- YENİ EKLENEN "ZIRH" METOTLARI ---
+
+    // 1. Bu TCKN veritabanında (silinmiş olsa dahi) mevcut mu?
+    // SQL: SELECT COUNT(*) > 0 FROM customer WHERE tc_no = ?
+    boolean existsByTcNo(String tcNo);
+
+    // 2. Bu e-posta veritabanında (silinmiş olsa dahi) mevcut mu?
+    // SQL: SELECT COUNT(*) > 0 FROM customer WHERE email = ?
+    boolean existsByEmail(String email);
 }

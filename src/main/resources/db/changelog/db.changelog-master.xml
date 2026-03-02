@@ -7,5 +7,7 @@
 
     <include file="db/changelog/01-create-customer-table.xml"/>
     <include file="db/changelog/02-add-audit-columns.xml"/>
+    <include file="db/changelog/03-create-error-messages-table.xml"/>
+    <include file="db/changelog/04-add-tckn-error-code.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

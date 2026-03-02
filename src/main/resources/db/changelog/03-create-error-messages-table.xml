@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <changeSet id="create-error-messages-table" author="omeralkan">
+        <createTable tableName="error_messages">
+            <column name="error_code" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="insert-default-error-messages" author="omeralkan">
+        <insert tableName="error_messages">
+            <column name="error_code" value="CUST-404"/>
+            <column name="message" value="Aradığınız müşteri sistemde bulunamadı veya silinmiş olabilir."/>
+        </insert>
+        <insert tableName="error_messages">
+            <column name="error_code" value="CUST-409"/>
+            <column name="message" value="Bu e-posta adresi ile kayıtlı başka bir müşteri bulunmaktadır."/>
+        </insert>
+        <insert tableName="error_messages">
+            <column name="error_code" value="SYS-400"/>
+            <column name="message" value="Gönderilen veriler sistem doğrulama kurallarına uymuyor."/>
+        </insert>
+        <insert tableName="error_messages">
+            <column name="error_code" value="SYS-500"/>
+            <column name="message" value="Sunucu tarafında beklenmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin."/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
