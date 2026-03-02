@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="20260302-05" author="omeralkan">
+        <addColumn tableName="error_messages">
+            <column name="language" type="varchar(5)" defaultValue="tr">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <dropPrimaryKey tableName="error_messages" />
+
+        <addPrimaryKey tableName="error_messages" columnNames="error_code, language" constraintName="pk_error_messages"/>
+    </changeSet>
+
+    <changeSet id="20260302-06" author="omeralkan">
+        <insert tableName="error_messages">
+            <column name="error_code" value="CUST-404"/>
+            <column name="language" value="en"/>
+            <column name="message" value="The requested customer was not found or may have been deleted."/>
+        </insert>
+
+        <insert tableName="error_messages">
+            <column name="error_code" value="CUST-408"/>
+            <column name="language" value="en"/>
+            <column name="message" value="A customer is already registered with this Turkish ID number."/>
+        </insert>
+
+        <insert tableName="error_messages">
+            <column name="error_code" value="CUST-409"/>
+            <column name="language" value="en"/>
+            <column name="message" value="A customer is already registered with this email address."/>
+        </insert>
+
+        <insert tableName="error_messages">
+            <column name="error_code" value="SYS-400"/>
+            <column name="language" value="en"/>
+            <column name="message" value="The submitted data does not comply with system validation rules."/>
+        </insert>
+
+        <insert tableName="error_messages">
+            <column name="error_code" value="SYS-500"/>
+            <column name="language" value="en"/>
+            <column name="message" value="An unexpected error occurred on the server. Please try again later."/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
+

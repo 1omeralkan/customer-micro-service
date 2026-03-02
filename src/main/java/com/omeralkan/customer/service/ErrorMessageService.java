@@ -11,16 +11,14 @@ public class ErrorMessageService {
 
     private final ErrorMessageRepository errorMessageRepository;
 
-    // CLEAN CODE KURALI: Kodun ortasına string gömülmez. Sabit (Constant) olarak tanımlanır.
     private static final String DEFAULT_ERROR_MESSAGE = "Beklenmeyen bir sistem hatası oluştu.";
 
-    // Gelen errorCode'u (ID'yi) önce RAM'de (Cache) arar. Bulamazsa DB'ye gider.
-    @Cacheable(value = "errorMessages", key = "#errorCode")
-    public String getMessage(String errorCode) {
+    // SENIOR DOKUNUŞU: Cache key artık dil parametresini de içeriyor!
+    @Cacheable(value = "errorMessages", key = "#errorCode + '_' + #language")
+    public String getMessage(String errorCode, String language) {
 
-        // Kaan abinin kuralı: Sadece ID ile bul!
-        return errorMessageRepository.findById(errorCode)
+        return errorMessageRepository.findByErrorCodeAndLanguage(errorCode, language)
                 .map(errorMessage -> errorMessage.getMessage())
-                .orElse(DEFAULT_ERROR_MESSAGE + " (Kod: " + errorCode + ")");
+                .orElse(DEFAULT_ERROR_MESSAGE + " (Code: " + errorCode + ")");
     }
 }

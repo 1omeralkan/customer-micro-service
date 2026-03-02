@@ -1,22 +1,22 @@
 package com.omeralkan.customer.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Table(name = "error_messages")
 @Data
+@IdClass(ErrorMessageId.class) // JPA'ya ID sınıfımızı tanıtıyoruz
 public class ErrorMessage {
 
-    // Doğal Anahtar (Natural Key): Hata kodunun kendisi artık ID'miz.
     @Id
     @Column(name = "error_code", nullable = false, length = 50)
     private String errorCode;
 
-    // Ekrana basılacak olan hata metni (Şimdilik sadece Türkçe)
+    @Id
+    @Column(name = "language", nullable = false, length = 5)
+    private String language;
+
     @Column(name = "message", nullable = false, length = 255)
     private String message;
 }
