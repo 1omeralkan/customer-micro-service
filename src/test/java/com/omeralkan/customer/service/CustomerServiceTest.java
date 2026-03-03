@@ -4,6 +4,8 @@ import com.omeralkan.customer.dto.CustomerResponse;
 import com.omeralkan.customer.dto.CustomerSaveRequest;
 import com.omeralkan.customer.entity.Customer;
 import com.omeralkan.customer.exception.CustomerBusinessException;
+import com.omeralkan.customer.repository.CityRepository;
+import com.omeralkan.customer.repository.CountryRepository;
 import com.omeralkan.customer.repository.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +34,12 @@ class CustomerServiceTest {
     @Mock
     private CustomerRepository customerRepository;
 
+    @Mock
+    private CountryRepository countryRepository;
+
+    @Mock
+    private CityRepository cityRepository;
+
     @InjectMocks
     private CustomerService customerService;
 
@@ -45,6 +53,7 @@ class CustomerServiceTest {
     private static final String ERR_404 = "CUST-404";
     private static final String ERR_408 = "CUST-408";
     private static final String ERR_409 = "CUST-409";
+    private static final String ERR_LOC_400 = "LOC-400";
 
     private CustomerSaveRequest request;
     private Customer mockCustomer;
@@ -99,6 +108,43 @@ class CustomerServiceTest {
         assertEquals(HttpStatus.CONFLICT, ex.getHttpStatus());
         // Önemli: TCKN çakışırsa save metodu asla çağrılmamalı (Fail-Fast) [cite: 2026-02-24].
         verify(customerRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Şehir seçilen ülkeye ait değilse Bad Request (LOC-400) fırlatmalıdır")
+    void shouldThrowBadRequest_WhenCityDoesNotBelongToCountry() {
+        // GIVEN: Kullanıcının hatalı kombinasyonu
+        final Long requestCountryId = 1L; // Kullanıcı Türkiye'yi seçti
+        final Long requestCityId = 5L;    // Kullanıcı Texas'ı seçti
+        final Long realCountryIdOfCity = 2L; // Texas ABD'ye ait
+
+        // Request nesnemize hatalı lokasyon verilerini gömüyoruz
+        request.setAddressCountryId(requestCountryId);
+        request.setAddressCityId(requestCityId);
+
+        // Veritabanında duran sahte ABD ve Texas nesneleri
+        com.omeralkan.customer.entity.Country usa = new com.omeralkan.customer.entity.Country();
+        usa.setId(realCountryIdOfCity);
+
+        com.omeralkan.customer.entity.City texas = new com.omeralkan.customer.entity.City();
+        texas.setId(requestCityId);
+        texas.setCountry(usa);
+
+        // Temel validasyonları geçmesi için taklit (Mock)
+        given(customerRepository.existsByTcNo(TEST_TCNO)).willReturn(false);
+        given(customerRepository.existsByEmail(TEST_EMAIL)).willReturn(false);
+
+        // Zırhın Testi: Servis 5 numaralı şehri istediğinde ona sahte Texas'ı ver
+        given(cityRepository.findById(requestCityId)).willReturn(java.util.Optional.of(texas));
+
+        // WHEN & THEN
+        CustomerBusinessException ex = assertThrows(CustomerBusinessException.class,
+                () -> customerService.saveCustomer(request));
+
+        // Beklentilerimiz: LOC-400 hatası fırlamalı ve veritabanına KAYIT YAPILMAMALI!
+        assertEquals(ERR_LOC_400, ex.getErrorCode());
+        assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatus());
+        verify(customerRepository, never()).save(any(Customer.class));
     }
 
     // =========================================================================

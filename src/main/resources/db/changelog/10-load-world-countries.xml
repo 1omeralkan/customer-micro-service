@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="20260303-14" author="omeralkan">
+        <sql>
+            INSERT INTO countries (iso_code, name, phone_code) VALUES
+            ('US', 'Amerika Birleşik Devletleri', '+1'),
+            ('DE', 'Almanya', '+49'),
+            ('GB', 'Birleşik Krallık', '+44'),
+            ('FR', 'Fransa', '+33'),
+            ('IT', 'İtalya', '+39'),
+            ('NL', 'Hollanda', '+31'),
+            ('ES', 'İspanya', '+34'),
+            ('RU', 'Rusya', '+7'),
+            ('JP', 'Japonya', '+81'),
+            ('CN', 'Çin', '+86'),
+            ('AZ', 'Azerbaycan', '+994'),
+            ('CA', 'Kanada', '+1'),
+            ('AU', 'Avustralya', '+61'),
+            ('BR', 'Brezilya', '+55'),
+            ('SA', 'Suudi Arabistan', '+966');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

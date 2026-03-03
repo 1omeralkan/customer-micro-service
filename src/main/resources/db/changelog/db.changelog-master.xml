@@ -10,5 +10,10 @@
     <include file="db/changelog/03-create-error-messages-table.xml"/>
     <include file="db/changelog/04-add-tckn-error-code.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/05-add-language-support.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/06-create-location-tables.xml"/>
+    <include file="db/changelog/07-update-customer-location.xml"/>
+    <include file="db/changelog/08-add-location-error-messages.xml"/>
+    <include file="db/changelog/09-load-turkey-cities.xml"/>
+    <include file="db/changelog/10-load-world-countries.xml"/>
 
 </databaseChangeLog>

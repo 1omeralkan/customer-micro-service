@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Table(name = "customer")
 public class Customer {
 
-    @Id // Bu alan Primary Key'dir.
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID otomatik artar (Auto Increment).
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "ad", nullable = false, length = 50)
@@ -37,17 +37,20 @@ public class Customer {
     @Column(name = "dogum_yeri", length = 50)
     private String dogumYeri;
 
-    @Column(name = "adres")
-    private String adres; // length belirtmezsek varsayılan 255 alır.
+    // =======================================================
+    // KURUMSAL MİMARİ: Artık adres ve telefon basit String değil, kendi başına birer saygın nesnedir!
+    @Embedded
+    private Address address;
 
-    @Column(name = "tel_no", length = 15)
-    private String telNo;
+    @Embedded
+    private PhoneNumber phoneNumber;
+    // =======================================================
 
     @Column(name = "delete_flag", nullable = false, columnDefinition = "tinyint")
     private boolean deleteFlag = false;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt; // updatable=false: Kayıt oluştuktan sonra değiştirilemez.
+    private LocalDateTime createdAt;
 
     @Column(name = "create_user", nullable = false)
     private String createUser;
@@ -58,15 +61,13 @@ public class Customer {
     @Column(name = "update_user")
     private String updateUser;
 
-    // Kayıt atılmadan hemen önce çalışır (Insert öncesi)
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.createUser = "admin"; // İleride gerçek kullanıcıyı alacağız.
+        this.createUser = "admin";
         this.deleteFlag = false;
     }
 
-    // Güncelleme yapılmadan hemen önce çalışır (Update öncesi)
     @PreUpdate
     public void onUpdate() {
         this.updateDate = LocalDateTime.now();

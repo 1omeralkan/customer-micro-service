@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="20260303-12" author="omeralkan">
+
+        <insert tableName="error_messages">
+            <column name="error_code" value="LOC-400"/>
+            <column name="language" value="tr"/>
+            <column name="message" value="Seçtiğiniz şehir, belirttiğiniz ülkeye ait değildir. Lütfen geçerli bir lokasyon kombinasyonu giriniz."/>
+        </insert>
+
+        <insert tableName="error_messages">
+            <column name="error_code" value="LOC-400"/>
+            <column name="language" value="en"/>
+            <column name="message" value="The selected city does not belong to the specified country. Please enter a valid location combination."/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -25,7 +25,7 @@ public class CustomerSaveRequest {
     private String tcNo;
 
     @NotBlank(message = "Email alanı boş geçilemez.")
-    @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Lütfen geçerli bir e-posta adresi giriniz. (Örn: ornek@domain.com)")
+    @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Lütfen geçerli bir e-posta adresi giriniz.")
     @Size(max = 100, message = "Email adresi 100 karakteri geçemez.")
     private String email;
 
@@ -33,15 +33,22 @@ public class CustomerSaveRequest {
     @Past(message = "Doğum tarihi bugünden ileri bir tarih olamaz.")
     private LocalDate dogumTarihi;
 
-    // Eğer veri gelirse kurallara uymak zorunda, gelmezse (null) sorun yok.
-
     @Size(min = 2, max = 50, message = "Doğum yeri geçerli bir şehir ismi olmalıdır.")
     private String dogumYeri;
 
-    @Size(max = 250, message = "Adres alanı en fazla 250 karakter olabilir.")
-    private String adres;
+    // ==========================================
+    // YENİ KURUMSAL LOKASYON VE TELEFON MİMARİSİ
+    // ==========================================
 
-    // Telefon gelirse formatı doğru olmalı, gelmezse (null) hata vermez.
+    private Long addressCountryId; // Kullanıcı "Türkiye" seçtiğinde bize '1' gönderecek
+
+    private Long addressCityId;    // Kullanıcı "İstanbul" seçtiğinde bize '1' (veya ID'si neyse) gönderecek
+
+    @Size(max = 250, message = "Açık adres alanı en fazla 250 karakter olabilir.")
+    private String openAddress;    // Sadece sokak/mahalle bilgisini düz metin olarak alacağız
+
+    private Long phoneCountryId;   // Kullanıcı "+90" seçtiğinde Türkiye'nin ID'sini gönderecek
+
     @Pattern(regexp = "^(5)\\d{9}$", message = "Telefon numarası 5 ile başlamalı ve 10 haneli olmalıdır.")
-    private String telNo;
+    private String phoneNumber;    // Sadece 5551234567 kısmını alacağız
 }
