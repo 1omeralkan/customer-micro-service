@@ -15,5 +15,6 @@
     <include file="db/changelog/08-add-location-error-messages.xml"/>
     <include file="db/changelog/09-load-turkey-cities.xml"/>
     <include file="db/changelog/10-load-world-countries.xml"/>
+    <include file="db/changelog/11-add-audit-to-reference-tables.xml"/>
 
 </databaseChangeLog>

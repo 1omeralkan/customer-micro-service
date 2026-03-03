@@ -14,7 +14,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-// Bu anotasyon çok kritik: Eğer 'details' listesi boşsa (null), JSON çıktısında bu alanı hiç göstermez.
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
 
@@ -27,11 +26,9 @@ public class ErrorResponse {
 
     private String message;
 
-    // YENİ EKLEDİĞİMİZ ALAN: Birden fazla validasyon hatasını (Ad boş, Email yanlış vb.)
-    // burada bir liste olarak taşıyacağız.
+
     private List<String> details;
 
-    // Sadece mesajlı hatalar için (Örn: 404) kolaylık sağlayacak bir constructor.
     public ErrorResponse(String businessErrorCode, String message, int httpStatus) {
         this.businessErrorCode = businessErrorCode;
         this.message = message;

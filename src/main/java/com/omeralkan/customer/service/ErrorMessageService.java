@@ -13,7 +13,6 @@ public class ErrorMessageService {
 
     private static final String DEFAULT_ERROR_MESSAGE = "Beklenmeyen bir sistem hatası oluştu.";
 
-    // SENIOR DOKUNUŞU: Cache key artık dil parametresini de içeriyor!
     @Cacheable(value = "errorMessages", key = "#errorCode + '_' + #language")
     public String getMessage(String errorCode, String language) {
 

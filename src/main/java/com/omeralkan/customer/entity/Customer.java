@@ -37,14 +37,11 @@ public class Customer {
     @Column(name = "dogum_yeri", length = 50)
     private String dogumYeri;
 
-    // =======================================================
-    // KURUMSAL MİMARİ: Artık adres ve telefon basit String değil, kendi başına birer saygın nesnedir!
     @Embedded
     private Address address;
 
     @Embedded
     private PhoneNumber phoneNumber;
-    // =======================================================
 
     @Column(name = "delete_flag", nullable = false, columnDefinition = "tinyint")
     private boolean deleteFlag = false;

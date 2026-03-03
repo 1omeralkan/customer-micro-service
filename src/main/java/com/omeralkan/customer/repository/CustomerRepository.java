@@ -14,8 +14,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<Customer> findByIdAndDeleteFlagFalse(Long id);
 
-    // --- YENİ EKLENEN "ZIRH" METOTLARI ---
-
     // 1. Bu TCKN veritabanında (silinmiş olsa dahi) mevcut mu?
     // SQL: SELECT COUNT(*) > 0 FROM customer WHERE tc_no = ?
     boolean existsByTcNo(String tcNo);

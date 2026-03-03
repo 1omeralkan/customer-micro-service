@@ -47,7 +47,6 @@ public class CustomerService {
         customer.setDogumTarihi(request.getDogumTarihi());
         customer.setDogumYeri(request.getDogumYeri());
 
-        // SENIOR DOKUNUŞU: Adres ve Telefonu ayrı nesneler olarak inşa edip (Build) Entity'ye gömüyoruz.
         buildAndSetLocationData(customer, request);
 
         Customer savedCustomer = customerRepository.save(customer);
@@ -85,7 +84,6 @@ public class CustomerService {
         customer.setDogumTarihi(request.getDogumTarihi());
         customer.setDogumYeri(request.getDogumYeri());
 
-        // Güncelleme işleminde de aynı inşa metodunu çağırıyoruz (DRY Prensibi)
         buildAndSetLocationData(customer, request);
 
         Customer updatedCustomer = customerRepository.save(customer);
@@ -100,9 +98,6 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    // =====================================================================================
-    // KULLANICIYA DÖNÜŞ MAPPING'İ (ÇELİK YELEKLİ VERSİYON)
-    // =====================================================================================
     private CustomerResponse mapToResponse(Customer customer) {
         CustomerResponse response = new CustomerResponse();
         response.setId(customer.getId());
@@ -111,7 +106,6 @@ public class CustomerService {
         response.setEmail(customer.getEmail());
         response.setTcNo(customer.getTcNo());
 
-        // 1. Adres Mapping İşlemi (Null Korumalı)
         if (customer.getAddress() != null) {
             response.setOpenAddress(customer.getAddress().getOpenAddress());
 
@@ -125,7 +119,6 @@ public class CustomerService {
             }
         }
 
-        // 2. Telefon Mapping İşlemi (Null Korumalı)
         if (customer.getPhoneNumber() != null) {
             response.setPhoneNumber(customer.getPhoneNumber().getNumber());
 
@@ -140,7 +133,6 @@ public class CustomerService {
 
     private void buildAndSetLocationData(Customer customer, CustomerSaveRequest request) {
 
-        // 1. Adres Nesnesinin İnşası ve ZIRH KONTROLÜ
         Address address = new Address();
 
         if (request.getAddressCountryId() != null) {
@@ -148,23 +140,19 @@ public class CustomerService {
         }
 
         if (request.getAddressCityId() != null) {
-            // ZIRH 1: Şehri veritabanından GERÇEKTEN çekiyoruz (findById).
-            // Çünkü sadece ID'sini kaydetmeyeceğiz, içine girip "Sen hangi ülkeye aitsin?" diye soracağız.
+
             City city = cityRepository.findById(request.getAddressCityId())
                     .orElseThrow(() -> new CustomerBusinessException(ERROR_CUSTOMER_NOT_FOUND, HttpStatus.NOT_FOUND));
 
-            // ZIRH 2 (FİNAL PATRONU): Şehrin bağlı olduğu Ülke ID'si ile, kullanıcının JSON'da gönderdiği Ülke ID'si eşleşiyor mu?
             if (request.getAddressCountryId() != null && !city.getCountry().getId().equals(request.getAddressCountryId())) {
-                // Eşleşmiyorsa acımadan 400 Bad Request fırlat!
                 throw new CustomerBusinessException(ERROR_CITY_NOT_BELONG_TO_COUNTRY, HttpStatus.BAD_REQUEST);
             }
 
-            address.setCity(city); // Testi geçtiyse adrese ekle.
+            address.setCity(city);
         }
         address.setOpenAddress(request.getOpenAddress());
         customer.setAddress(address);
 
-        // 2. Telefon Nesnesinin İnşası (Burada mantıksal bir bağ kontrolüne gerek yok)
         PhoneNumber phone = new PhoneNumber();
         if (request.getPhoneCountryId() != null) {
             phone.setCountry(countryRepository.getReferenceById(request.getPhoneCountryId()));

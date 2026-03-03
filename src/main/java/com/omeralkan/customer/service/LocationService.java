@@ -27,8 +27,6 @@ public class LocationService {
                 .toList();
     }
 
-    // SENIOR DOKUNUŞU: Her ülkenin şehirleri ayrı ayrı Cache'lenir.
-    // Örn: "cities::1" (Türkiye), "cities::2" (ABD) gibi.
     @Cacheable(value = "cities", key = "#countryId")
     public List<CityResponse> getCitiesByCountry(Long countryId) {
         return cityRepository.findAllByCountryId(countryId).stream()
@@ -36,7 +34,6 @@ public class LocationService {
                 .toList();
     }
 
-    // DRY (Don't Repeat Yourself) Prensibi için dönüştürme metotları
     private CountryResponse mapToCountryResponse(Country country) {
         CountryResponse response = new CountryResponse();
         response.setId(country.getId());

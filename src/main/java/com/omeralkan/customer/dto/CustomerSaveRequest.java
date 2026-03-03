@@ -36,10 +36,6 @@ public class CustomerSaveRequest {
     @Size(min = 2, max = 50, message = "Doğum yeri geçerli bir şehir ismi olmalıdır.")
     private String dogumYeri;
 
-    // ==========================================
-    // YENİ KURUMSAL LOKASYON VE TELEFON MİMARİSİ
-    // ==========================================
-
     private Long addressCountryId; // Kullanıcı "Türkiye" seçtiğinde bize '1' gönderecek
 
     private Long addressCityId;    // Kullanıcı "İstanbul" seçtiğinde bize '1' (veya ID'si neyse) gönderecek
