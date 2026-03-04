@@ -16,7 +16,6 @@ public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // SENIOR DOKUNUŞU: Lazy (Tembel) yükleme. İhtiyacımız olmadıkça ülkeyi DB'den çekip RAM'i yormayız.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private Country country;
@@ -26,10 +25,6 @@ public class City {
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
-
-    // =======================================================
-    // AUDIT (DENETİM) ALANLARI
-    // =======================================================
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

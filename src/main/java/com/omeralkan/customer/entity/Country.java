@@ -25,10 +25,6 @@ public class Country {
     @Column(name = "phone_code", nullable = false, length = 10)
     private String phoneCode;
 
-    // =======================================================
-    // AUDIT (DENETİM) ALANLARI
-    // =======================================================
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

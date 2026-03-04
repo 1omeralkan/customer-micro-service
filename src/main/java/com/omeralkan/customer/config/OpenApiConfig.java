@@ -12,7 +12,6 @@ public class OpenApiConfig {
     public OperationCustomizer customGlobalHeaders() {
         return (operation, handlerMethod) -> {
 
-            //Swagger'a diyoruz ki: "Arayüzdeki her bir metoda bu başlığı (Header) ekle"
             operation.addParametersItem(new HeaderParameter()
                     .name("Accept-Language")
                     .description("Dil Seçeneği (İngilizce için 'en', Türkçe için boş bırakın veya 'tr' yazın)")

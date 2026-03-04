@@ -19,7 +19,7 @@ public class LocationService {
     private final CountryRepository countryRepository;
     private final CityRepository cityRepository;
 
-    // SENIOR DOKUNUŞU: Veritabanından bir kez okunur, "countries" adıyla RAM'e yazılır.
+    //Veritabanından bir kez okunur, "countries" adıyla RAM'e yazılır.
     @Cacheable(value = "countries")
     public List<CountryResponse> getAllCountries() {
         return countryRepository.findAll().stream()

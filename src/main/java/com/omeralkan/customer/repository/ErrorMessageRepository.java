@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ErrorMessageRepository extends JpaRepository<ErrorMessage, ErrorMessageId> {
 
-    // Clean Code: Servisten kolayca çağırmak için özel metot
+    //Servisten kolayca çağırmak için özel metot
     Optional<ErrorMessage> findByErrorCodeAndLanguage(String errorCode, String language);
 }
