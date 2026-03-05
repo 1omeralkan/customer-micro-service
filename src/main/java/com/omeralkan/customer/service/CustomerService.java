@@ -1,52 +1,44 @@
 package com.omeralkan.customer.service;
 
+import com.omeralkan.customer.client.ParameterServiceClient;
 import com.omeralkan.customer.dto.CustomerResponse;
 import com.omeralkan.customer.dto.CustomerSaveRequest;
 import com.omeralkan.customer.entity.Address;
 import com.omeralkan.customer.entity.Customer;
 import com.omeralkan.customer.entity.PhoneNumber;
 import com.omeralkan.customer.exception.CustomerBusinessException;
-import com.omeralkan.customer.repository.CityRepository;
-import com.omeralkan.customer.repository.CountryRepository;
 import com.omeralkan.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.omeralkan.customer.entity.City;
+
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final CountryRepository countryRepository; // YENİ: Ülkeleri DB'den çekmek için
-    private final CityRepository cityRepository;       // YENİ: Şehirleri DB'den çekmek için
+    private final ParameterServiceClient parameterServiceClient;
 
-    // MİMARİ KARAR: Hata kodlarını merkezi ve değişmez (constant) yaptık [cite: 2026-03-01].
     private static final String ERROR_CUSTOMER_NOT_FOUND = "CUST-404";
     private static final String ERROR_TCKN_ALREADY_EXISTS = "CUST-408";
     private static final String ERROR_EMAIL_ALREADY_EXISTS = "CUST-409";
     private static final String ERROR_CITY_NOT_BELONG_TO_COUNTRY = "LOC-400";
+    private static final String ERROR_EXTERNAL_SERVICE = "EXT-500";
 
     public CustomerResponse saveCustomer(CustomerSaveRequest request) {
-
         if (customerRepository.existsByTcNo(request.getTcNo())) {
             throw new CustomerBusinessException(ERROR_TCKN_ALREADY_EXISTS, HttpStatus.CONFLICT);
         }
-
         if (customerRepository.existsByEmail(request.getEmail())) {
             throw new CustomerBusinessException(ERROR_EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
         }
 
         Customer customer = new Customer();
-        customer.setAd(request.getAd());
-        customer.setSoyad(request.getSoyad());
-        customer.setTcNo(request.getTcNo());
-        customer.setEmail(request.getEmail());
-        customer.setDogumTarihi(request.getDogumTarihi());
-        customer.setDogumYeri(request.getDogumYeri());
-
+        updateCustomerFields(customer, request);
         buildAndSetLocationData(customer, request);
 
         Customer savedCustomer = customerRepository.save(customer);
@@ -72,18 +64,11 @@ public class CustomerService {
         if (!customer.getTcNo().equals(request.getTcNo()) && customerRepository.existsByTcNo(request.getTcNo())) {
             throw new CustomerBusinessException(ERROR_TCKN_ALREADY_EXISTS, HttpStatus.CONFLICT);
         }
-
         if (!customer.getEmail().equals(request.getEmail()) && customerRepository.existsByEmail(request.getEmail())) {
             throw new CustomerBusinessException(ERROR_EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
         }
 
-        customer.setAd(request.getAd());
-        customer.setSoyad(request.getSoyad());
-        customer.setTcNo(request.getTcNo());
-        customer.setEmail(request.getEmail());
-        customer.setDogumTarihi(request.getDogumTarihi());
-        customer.setDogumYeri(request.getDogumYeri());
-
+        updateCustomerFields(customer, request);
         buildAndSetLocationData(customer, request);
 
         Customer updatedCustomer = customerRepository.save(customer);
@@ -93,9 +78,18 @@ public class CustomerService {
     public void deleteCustomer(Long id) {
         Customer customer = customerRepository.findByIdAndDeleteFlagFalse(id)
                 .orElseThrow(() -> new CustomerBusinessException(ERROR_CUSTOMER_NOT_FOUND, HttpStatus.NOT_FOUND));
-
         customer.setDeleteFlag(true);
         customerRepository.save(customer);
+    }
+
+    // Ortak alan güncellemeleri için yardımcı metod
+    private void updateCustomerFields(Customer customer, CustomerSaveRequest request) {
+        customer.setAd(request.getAd());
+        customer.setSoyad(request.getSoyad());
+        customer.setTcNo(request.getTcNo());
+        customer.setEmail(request.getEmail());
+        customer.setDogumTarihi(request.getDogumTarihi());
+        customer.setDogumYeri(request.getDogumYeri());
     }
 
     private CustomerResponse mapToResponse(Customer customer) {
@@ -108,54 +102,86 @@ public class CustomerService {
 
         if (customer.getAddress() != null) {
             response.setOpenAddress(customer.getAddress().getOpenAddress());
+            Long countryId = customer.getAddress().getCountryId();
+            Long cityId = customer.getAddress().getCityId();
 
-            if (customer.getAddress().getCountry() != null) {
-                response.setAddressCountryId(customer.getAddress().getCountry().getId());
-                response.setAddressCountryName(customer.getAddress().getCountry().getName());
+            // FEIGN
+            if (countryId != null) {
+                try {
+                    var country = parameterServiceClient.getCountryById(countryId);
+                    response.setAddressCountryId(countryId);
+                    response.setAddressCountryName(country.name());
+                } catch (Exception e) {
+                    log.error("Ülke ismi çekilemedi ID: {}", countryId);
+                }
             }
-            if (customer.getAddress().getCity() != null) {
-                response.setAddressCityId(customer.getAddress().getCity().getId());
-                response.setAddressCityName(customer.getAddress().getCity().getName());
+            if (cityId != null) {
+                try {
+
+                    var city = parameterServiceClient.getCityById(cityId);
+                    response.setAddressCityId(cityId);
+                    response.setAddressCityName(city.name());
+                } catch (Exception e) {
+                    log.error("Şehir ismi çekilemedi ID: {}", cityId);
+                }
             }
         }
 
-        if (customer.getPhoneNumber() != null) {
+        if (customer.getPhoneNumber() != null && customer.getPhoneNumber().getCountryId() != null) {
             response.setPhoneNumber(customer.getPhoneNumber().getNumber());
-
-            if (customer.getPhoneNumber().getCountry() != null) {
-                response.setPhoneCountryId(customer.getPhoneNumber().getCountry().getId());
-                response.setPhoneCode(customer.getPhoneNumber().getCountry().getPhoneCode());
+            try {
+                var phoneCountry = parameterServiceClient.getCountryById(customer.getPhoneNumber().getCountryId());
+                response.setPhoneCountryId(phoneCountry.id());
+                response.setPhoneCode(phoneCountry.phoneCode());
+            } catch (Exception e) {
+                log.error("Telefon ülke bilgisi çekilemedi.");
             }
         }
-
         return response;
     }
 
     private void buildAndSetLocationData(Customer customer, CustomerSaveRequest request) {
-
         Address address = new Address();
 
+        // 1. ÜLKE DOĞRULAMA (Feign)
         if (request.getAddressCountryId() != null) {
-            address.setCountry(countryRepository.getReferenceById(request.getAddressCountryId()));
-        }
-
-        if (request.getAddressCityId() != null) {
-
-            City city = cityRepository.findById(request.getAddressCityId())
-                    .orElseThrow(() -> new CustomerBusinessException(ERROR_CUSTOMER_NOT_FOUND, HttpStatus.NOT_FOUND));
-
-            if (request.getAddressCountryId() != null && !city.getCountry().getId().equals(request.getAddressCountryId())) {
-                throw new CustomerBusinessException(ERROR_CITY_NOT_BELONG_TO_COUNTRY, HttpStatus.BAD_REQUEST);
+            try {
+                parameterServiceClient.getCountryById(request.getAddressCountryId());
+                address.setCountryId(request.getAddressCountryId());
+            } catch (Exception e) {
+                throw new CustomerBusinessException("Geçersiz Ülke ID: " + request.getAddressCountryId(), HttpStatus.BAD_REQUEST);
             }
-
-            address.setCity(city);
         }
+
+        // 2. ŞEHİR VE BAĞLANTI KONTROLÜ (Feign)
+        if (request.getAddressCityId() != null) {
+            try {
+                var city = parameterServiceClient.getCityById(request.getAddressCityId());
+
+                // İş Kuralı: Şehir seçilen ülkeye mi ait?
+                if (request.getAddressCountryId() != null && !city.countryId().equals(request.getAddressCountryId())) {
+                    throw new CustomerBusinessException(ERROR_CITY_NOT_BELONG_TO_COUNTRY, HttpStatus.BAD_REQUEST);
+                }
+                address.setCityId(request.getAddressCityId());
+            } catch (CustomerBusinessException cbe) {
+                throw cbe;
+            } catch (Exception e) {
+                throw new CustomerBusinessException("Geçersiz Şehir ID: " + request.getAddressCityId(), HttpStatus.BAD_REQUEST);
+            }
+        }
+
         address.setOpenAddress(request.getOpenAddress());
         customer.setAddress(address);
 
+        // 3. TELEFON ÜLKE DOĞRULAMA (Feign)
         PhoneNumber phone = new PhoneNumber();
         if (request.getPhoneCountryId() != null) {
-            phone.setCountry(countryRepository.getReferenceById(request.getPhoneCountryId()));
+            try {
+                parameterServiceClient.getCountryById(request.getPhoneCountryId());
+                phone.setCountryId(request.getPhoneCountryId());
+            } catch (Exception e) {
+                throw new CustomerBusinessException("Geçersiz Telefon Ülke ID", HttpStatus.BAD_REQUEST);
+            }
         }
         phone.setNumber(request.getPhoneNumber());
         customer.setPhoneNumber(phone);

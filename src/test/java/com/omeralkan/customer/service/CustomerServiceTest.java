@@ -1,11 +1,11 @@
 package com.omeralkan.customer.service;
 
+import com.omeralkan.customer.client.ParameterServiceClient;
 import com.omeralkan.customer.dto.CustomerResponse;
 import com.omeralkan.customer.dto.CustomerSaveRequest;
+import com.omeralkan.customer.dto.ParameterCityResponse;
 import com.omeralkan.customer.entity.Customer;
 import com.omeralkan.customer.exception.CustomerBusinessException;
-import com.omeralkan.customer.repository.CityRepository;
-import com.omeralkan.customer.repository.CountryRepository;
 import com.omeralkan.customer.repository.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,18 +23,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
 
     @Mock
     private CustomerRepository customerRepository;
 
+    // YENİ MİMARİ: Artık Country/City repository yok, Feign Client var!
     @Mock
-    private CountryRepository countryRepository;
-
-    @Mock
-    private CityRepository cityRepository;
+    private ParameterServiceClient parameterServiceClient;
 
     @InjectMocks
     private CustomerService customerService;
@@ -90,7 +87,8 @@ class CustomerServiceTest {
         CustomerBusinessException ex = assertThrows(CustomerBusinessException.class,
                 () -> customerService.saveCustomer(request));
 
-        assertEquals(ERR_408, ex.getErrorCode());
+        // Senin özel exception sınıfına göre metodları korudum (getErrorCode vs getMessage)
+        assertEquals(ERR_408, ex.getMessage());
         assertEquals(HttpStatus.CONFLICT, ex.getHttpStatus());
         verify(customerRepository, never()).save(any());
     }
@@ -105,23 +103,20 @@ class CustomerServiceTest {
         request.setAddressCountryId(requestCountryId);
         request.setAddressCityId(requestCityId);
 
-        com.omeralkan.customer.entity.Country usa = new com.omeralkan.customer.entity.Country();
-        usa.setId(realCountryIdOfCity);
-
-        com.omeralkan.customer.entity.City texas = new com.omeralkan.customer.entity.City();
-        texas.setId(requestCityId);
-        texas.setCountry(usa);
-
         given(customerRepository.existsByTcNo(TEST_TCNO)).willReturn(false);
         given(customerRepository.existsByEmail(TEST_EMAIL)).willReturn(false);
 
-        given(cityRepository.findById(requestCityId)).willReturn(java.util.Optional.of(texas));
+        // YENİ MİMARİ: Feign Client'tan gelen DTO'yu mockluyoruz!
+        ParameterCityResponse mockCityResponse = mock(ParameterCityResponse.class);
+        given(mockCityResponse.countryId()).willReturn(realCountryIdOfCity);
+
+        given(parameterServiceClient.getCityById(requestCityId)).willReturn(mockCityResponse);
 
         CustomerBusinessException ex = assertThrows(CustomerBusinessException.class,
                 () -> customerService.saveCustomer(request));
 
-        assertEquals(ERR_LOC_400, ex.getErrorCode());
-        assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatus());
+        assertEquals(ERR_LOC_400, ex.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getHttpStatus());
         verify(customerRepository, never()).save(any(Customer.class));
     }
 
@@ -148,7 +143,7 @@ class CustomerServiceTest {
         CustomerBusinessException ex = assertThrows(CustomerBusinessException.class,
                 () -> customerService.updateCustomer(TEST_ID, request));
 
-        assertEquals(ERR_409, ex.getErrorCode());
+        assertEquals(ERR_409, ex.getMessage());
         verify(customerRepository, never()).save(any());
     }
 
@@ -161,7 +156,7 @@ class CustomerServiceTest {
         CustomerBusinessException ex = assertThrows(CustomerBusinessException.class,
                 () -> customerService.getCustomerById(TEST_ID));
 
-        assertEquals(ERR_404, ex.getErrorCode());
+        assertEquals(ERR_404, ex.getMessage());
     }
 
     @Test

@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 public class PhoneNumber {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "phone_country_id")
-    private Country country;
+    @Column(name = "phone_country_id")
+    private Long countryId;
 
     @Column(name = "phone_number", length = 20)
     private String number;
