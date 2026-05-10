@@ -82,7 +82,6 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    // Ortak alan güncellemeleri için yardımcı metod
     private void updateCustomerFields(Customer customer, CustomerSaveRequest request) {
         customer.setAd(request.getAd());
         customer.setSoyad(request.getSoyad());
@@ -105,7 +104,6 @@ public class CustomerService {
             Long countryId = customer.getAddress().getCountryId();
             Long cityId = customer.getAddress().getCityId();
 
-            // FEIGN
             if (countryId != null) {
                 try {
                     var country = parameterServiceClient.getCountryById(countryId);
@@ -143,7 +141,6 @@ public class CustomerService {
     private void buildAndSetLocationData(Customer customer, CustomerSaveRequest request) {
         Address address = new Address();
 
-        // 1. ÜLKE DOĞRULAMA (Feign)
         if (request.getAddressCountryId() != null) {
             try {
                 parameterServiceClient.getCountryById(request.getAddressCountryId());
@@ -153,7 +150,6 @@ public class CustomerService {
             }
         }
 
-        // 2. ŞEHİR VE BAĞLANTI KONTROLÜ (Feign)
         if (request.getAddressCityId() != null) {
             try {
                 var city = parameterServiceClient.getCityById(request.getAddressCityId());
@@ -173,7 +169,6 @@ public class CustomerService {
         address.setOpenAddress(request.getOpenAddress());
         customer.setAddress(address);
 
-        // 3. TELEFON ÜLKE DOĞRULAMA (Feign)
         PhoneNumber phone = new PhoneNumber();
         if (request.getPhoneCountryId() != null) {
             try {

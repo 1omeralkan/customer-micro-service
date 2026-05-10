@@ -15,7 +15,7 @@ public class OpenApiConfig {
             operation.addParametersItem(new HeaderParameter()
                     .name("Accept-Language")
                     .description("Dil Seçeneği (İngilizce için 'en', Türkçe için boş bırakın veya 'tr' yazın)")
-                    .required(false)); // Zorunlu değil (false). Gönderilmezse sistem 'tr' kabul edecek.
+                    .required(false));
 
             return operation;
         };

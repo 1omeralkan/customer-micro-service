@@ -7,8 +7,7 @@ import lombok.Setter;
 @Setter
 public class CustomerResponse {
 
-    // Dışarıya sadece bu bilgileri dönmek istiyoruz.
-    // Mesela 'deleteFlag', 'updateUser' gibi teknik detayları GİZLEDİK.
+
 
     private Long id;
     private String ad;
@@ -17,14 +16,14 @@ public class CustomerResponse {
     private String tcNo;
 
     private Long addressCountryId;
-    private String addressCountryName; // Front-end ekrana "Türkiye" yazabilsin diye
+    private String addressCountryName;
 
     private Long addressCityId;
-    private String addressCityName;    // Front-end ekrana "İstanbul" yazabilsin diye
+    private String addressCityName;
 
     private String openAddress;
 
     private Long phoneCountryId;
-    private String phoneCode;          // Örn: "+90"
-    private String phoneNumber;        // Örn: "5551234567"
+    private String phoneCode;
+    private String phoneNumber;
 }

@@ -9,11 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "parameter-service", url = "http://localhost:8081/api/v1")
 public interface ParameterServiceClient {
 
-    //Plakaya göre şehri getir
     @GetMapping("/cities/plate/{plateCode}")
     ParameterCityResponse getCityByPlateCode(@PathVariable("plateCode") String plateCode);
 
-    //Ülke ID'sine göre ülkeyi getir
     @GetMapping("/countries/{id}")
     ParameterCountryResponse getCountryById(@PathVariable("id") Long id);
 

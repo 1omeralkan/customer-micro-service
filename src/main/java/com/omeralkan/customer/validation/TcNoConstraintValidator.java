@@ -12,7 +12,6 @@ public class TcNoConstraintValidator implements ConstraintValidator<ValidTcNo, S
         if (value == null || value.trim().isEmpty()) {
             return true;
         }
-        //Algoritmayı çağırdığımız yer.
         return TCKNDogrulama.tcknGecerliMi(value);
 
     }

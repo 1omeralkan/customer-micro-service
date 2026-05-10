@@ -36,15 +36,15 @@ public class CustomerSaveRequest {
     @Size(min = 2, max = 50, message = "Doğum yeri geçerli bir şehir ismi olmalıdır.")
     private String dogumYeri;
 
-    private Long addressCountryId; // Kullanıcı "Türkiye" seçtiğinde bize '1' gönderecek
+    private Long addressCountryId;
 
-    private Long addressCityId;    // Kullanıcı "İstanbul" seçtiğinde bize '1' (veya ID'si neyse) gönderecek
+    private Long addressCityId;
 
     @Size(max = 250, message = "Açık adres alanı en fazla 250 karakter olabilir.")
-    private String openAddress;    // Sadece sokak/mahalle bilgisini düz metin olarak alacağız
+    private String openAddress;
 
-    private Long phoneCountryId;   // Kullanıcı "+90" seçtiğinde Türkiye'nin ID'sini gönderecek
+    private Long phoneCountryId;
 
     @Pattern(regexp = "^(5)\\d{9}$", message = "Telefon numarası 5 ile başlamalı ve 10 haneli olmalıdır.")
-    private String phoneNumber;    // Sadece 5551234567 kısmını alacağız
+    private String phoneNumber;
 }
