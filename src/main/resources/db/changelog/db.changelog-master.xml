@@ -16,5 +16,6 @@
     <include file="db/changelog/09-load-turkey-cities.xml"/>
     <include file="db/changelog/10-load-world-countries.xml"/>
     <include file="db/changelog/11-add-audit-to-reference-tables.xml"/>
+    <include file="db/changelog/12-add-password-to-customer.xml"/>
 
 </databaseChangeLog>

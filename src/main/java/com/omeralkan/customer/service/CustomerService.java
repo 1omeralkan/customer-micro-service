@@ -11,6 +11,7 @@ import com.omeralkan.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder; // Import buraya taşındı
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final ParameterServiceClient parameterServiceClient;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String ERROR_CUSTOMER_NOT_FOUND = "CUST-404";
     private static final String ERROR_TCKN_ALREADY_EXISTS = "CUST-408";
@@ -89,6 +91,8 @@ public class CustomerService {
         customer.setEmail(request.getEmail());
         customer.setDogumTarihi(request.getDogumTarihi());
         customer.setDogumYeri(request.getDogumYeri());
+
+        customer.setPassword(passwordEncoder.encode(request.getPassword()));
     }
 
     private CustomerResponse mapToResponse(Customer customer) {

@@ -31,6 +31,9 @@ public class Customer {
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Column(name = "dogum_tarihi", nullable = false)
     private LocalDate dogumTarihi;
 

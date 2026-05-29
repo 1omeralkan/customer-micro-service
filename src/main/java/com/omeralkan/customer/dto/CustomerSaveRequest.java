@@ -29,6 +29,10 @@ public class CustomerSaveRequest {
     @Size(max = 100, message = "Email adresi 100 karakteri geçemez.")
     private String email;
 
+    @NotBlank(message = "Şifre alanı boş geçilemez.")
+    @Size(min = 6, message = "Şifre en az 6 karakter olmalıdır.")
+    private String password;
+
     @NotNull(message = "Doğum tarihi boş olamaz.")
     @Past(message = "Doğum tarihi bugünden ileri bir tarih olamaz.")
     private LocalDate dogumTarihi;
