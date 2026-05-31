@@ -29,7 +29,6 @@ public class CustomerService {
     private static final String ERROR_TCKN_ALREADY_EXISTS = "CUST-408";
     private static final String ERROR_EMAIL_ALREADY_EXISTS = "CUST-409";
     private static final String ERROR_CITY_NOT_BELONG_TO_COUNTRY = "LOC-400";
-    private static final String ERROR_EXTERNAL_SERVICE = "EXT-500";
 
     public CustomerResponse saveCustomer(CustomerSaveRequest request) {
         if (customerRepository.existsByTcNo(request.getTcNo())) {
