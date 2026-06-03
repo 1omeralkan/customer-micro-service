@@ -1,0 +1,90 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.11)
+
+2026-06-03T15:32:42.758+03:00  INFO 3264 --- [customer-micro-service] [           main] c.o.c.CustomerMicroServiceApplication    : Starting CustomerMicroServiceApplication v0.0.1-SNAPSHOT using Java 17.0.12 with PID 3264 (C:\Staj\Backend\customer-micro-service\target\customer-micro-service-0.0.1-SNAPSHOT.jar started by omera in C:\Staj\Backend\customer-micro-service)
+2026-06-03T15:32:42.761+03:00  INFO 3264 --- [customer-micro-service] [           main] c.o.c.CustomerMicroServiceApplication    : No active profile set, falling back to 1 default profile: "default"
+2026-06-03T15:32:44.497+03:00  INFO 3264 --- [customer-micro-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-03T15:32:44.604+03:00  INFO 3264 --- [customer-micro-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 88 ms. Found 2 JPA repository interfaces.
+2026-06-03T15:32:44.882+03:00  INFO 3264 --- [customer-micro-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=c52cc15e-2ac3-38cf-a17e-c41ba70ecb90
+2026-06-03T15:32:44.987+03:00  INFO 3264 --- [customer-micro-service] [           main] ptablePropertiesBeanFactoryPostProcessor : Post-processing PropertySource instances
+2026-06-03T15:32:44.989+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource configurationProperties [class org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource
+2026-06-03T15:32:44.994+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource servletConfigInitParams [class org.springframework.core.env.PropertySource$StubPropertySource
+2026-06-03T15:32:44.994+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource servletContextInitParams [class org.springframework.core.env.PropertySource$StubPropertySource
+2026-06-03T15:32:44.996+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource systemProperties [org.springframework.core.env.PropertiesPropertySource] to EncryptableMapPropertySourceWrapper
+2026-06-03T15:32:44.996+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource systemEnvironment [org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor$OriginAwareSystemEnvironmentPropertySource] to EncryptableSystemEnvironmentPropertySourceWrapper
+2026-06-03T15:32:44.997+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource random [org.springframework.boot.env.RandomValuePropertySource] to EncryptablePropertySourceWrapper
+2026-06-03T15:32:44.997+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource cachedrandom [org.springframework.cloud.util.random.CachedRandomPropertySource] to EncryptablePropertySourceWrapper
+2026-06-03T15:32:44.997+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource Config resource 'class path resource [application.properties]' via location 'optional:classpath:/' [org.springframework.boot.env.OriginTrackedMapPropertySource] to EncryptableMapPropertySourceWrapper
+2026-06-03T15:32:44.997+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource springCloudClientHostInfo [org.springframework.core.env.MapPropertySource] to EncryptableMapPropertySourceWrapper
+2026-06-03T15:32:44.997+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource applicationInfo [org.springframework.boot.ApplicationInfoPropertySource] to EncryptableMapPropertySourceWrapper
+2026-06-03T15:32:45.734+03:00  INFO 3264 --- [customer-micro-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-03T15:32:45.750+03:00  INFO 3264 --- [customer-micro-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-03T15:32:45.751+03:00  INFO 3264 --- [customer-micro-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.52]
+2026-06-03T15:32:45.793+03:00  INFO 3264 --- [customer-micro-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-03T15:32:45.795+03:00  INFO 3264 --- [customer-micro-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2978 ms
+2026-06-03T15:32:45.822+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.filter.DefaultLazyPropertyFilter   : Property Filter custom Bean not found with name 'encryptablePropertyFilter'. Initializing Default Property Filter
+2026-06-03T15:32:45.851+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.r.DefaultLazyPropertyResolver      : Property Resolver custom Bean not found with name 'encryptablePropertyResolver'. Initializing Default Property Resolver
+2026-06-03T15:32:45.857+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.d.DefaultLazyPropertyDetector      : Property Detector custom Bean not found with name 'encryptablePropertyDetector'. Initializing Default Property Detector
+2026-06-03T15:32:45.934+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.encryptor.DefaultLazyEncryptor     : String Encryptor custom Bean not found with name 'jasyptStringEncryptor'. Initializing Default String Encryptor
+2026-06-03T15:32:45.961+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.algorithm, using default value: PBEWITHHMACSHA512ANDAES_256
+2026-06-03T15:32:45.962+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.key-obtention-iterations, using default value: 1000
+2026-06-03T15:32:45.963+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.pool-size, using default value: 1
+2026-06-03T15:32:45.963+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.provider-name, using default value: null
+2026-06-03T15:32:45.964+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.provider-class-name, using default value: null
+2026-06-03T15:32:45.964+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.salt-generator-classname, using default value: org.jasypt.salt.RandomSaltGenerator
+2026-06-03T15:32:45.967+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.iv-generator-classname, using default value: org.jasypt.iv.RandomIvGenerator
+2026-06-03T15:32:45.969+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.c.StringEncryptorBuilder           : Encryptor config not found for property jasypt.encryptor.string-output-type, using default value: base64
+2026-06-03T15:32:46.263+03:00  INFO 3264 --- [customer-micro-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-03T15:32:46.502+03:00  INFO 3264 --- [customer-micro-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@66234b0f
+2026-06-03T15:32:46.504+03:00  INFO 3264 --- [customer-micro-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-03T15:32:47.323+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.changelog                      : Reading from customer_db.databasechangelog
+2026-06-03T15:32:47.593+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.ui                             : Database is up to date, no changesets to execute
+2026-06-03T15:32:47.599+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.changelog                      : Reading from customer_db.databasechangelog
+2026-06-03T15:32:47.620+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.util                           : UPDATE SUMMARY
+2026-06-03T15:32:47.621+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.util                           : Run:                          0
+2026-06-03T15:32:47.621+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.util                           : Previously run:              17
+2026-06-03T15:32:47.621+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.util                           : Filtered out:                 0
+2026-06-03T15:32:47.621+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.util                           : -------------------------------
+2026-06-03T15:32:47.621+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.util                           : Total change sets:           17
+2026-06-03T15:32:47.622+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.util                           : Update summary generated
+2026-06-03T15:32:47.623+03:00  INFO 3264 --- [customer-micro-service] [           main] liquibase.command                        : Command execution complete
+2026-06-03T15:32:48.969+03:00  INFO 3264 --- [customer-micro-service] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-03T15:32:49.166+03:00  INFO 3264 --- [customer-micro-service] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.42.Final
+2026-06-03T15:32:49.251+03:00  INFO 3264 --- [customer-micro-service] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-03T15:32:49.612+03:00  INFO 3264 --- [customer-micro-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-03T15:32:49.680+03:00  INFO 3264 --- [customer-micro-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.43
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-03T15:32:50.497+03:00  INFO 3264 --- [customer-micro-service] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-03T15:32:50.524+03:00  INFO 3264 --- [customer-micro-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-03T15:32:51.398+03:00  WARN 3264 --- [customer-micro-service] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-03T15:32:51.667+03:00  INFO 3264 --- [customer-micro-service] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-06-03T15:32:51.668+03:00  WARN 3264 --- [customer-micro-service] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-03T15:32:53.172+03:00  INFO 3264 --- [customer-micro-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-03T15:32:53.174+03:00  INFO 3264 --- [customer-micro-service] [           main] u.j.c.RefreshScopeRefreshedEventListener : Refreshing cached encryptable property sources on ServletWebServerInitializedEvent
+2026-06-03T15:32:53.175+03:00  INFO 3264 --- [customer-micro-service] [           main] CachingDelegateEncryptablePropertySource : Property Source systemProperties refreshed
+2026-06-03T15:32:53.175+03:00  INFO 3264 --- [customer-micro-service] [           main] CachingDelegateEncryptablePropertySource : Property Source systemEnvironment refreshed
+2026-06-03T15:32:53.175+03:00  INFO 3264 --- [customer-micro-service] [           main] CachingDelegateEncryptablePropertySource : Property Source random refreshed
+2026-06-03T15:32:53.175+03:00  INFO 3264 --- [customer-micro-service] [           main] CachingDelegateEncryptablePropertySource : Property Source cachedrandom refreshed
+2026-06-03T15:32:53.175+03:00  INFO 3264 --- [customer-micro-service] [           main] CachingDelegateEncryptablePropertySource : Property Source Config resource 'class path resource [application.properties]' via location 'optional:classpath:/' refreshed
+2026-06-03T15:32:53.175+03:00  INFO 3264 --- [customer-micro-service] [           main] CachingDelegateEncryptablePropertySource : Property Source springCloudClientHostInfo refreshed
+2026-06-03T15:32:53.175+03:00  INFO 3264 --- [customer-micro-service] [           main] CachingDelegateEncryptablePropertySource : Property Source applicationInfo refreshed
+2026-06-03T15:32:53.176+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource configurationProperties [class org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource
+2026-06-03T15:32:53.176+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource servletConfigInitParams [class org.springframework.core.env.PropertySource$StubPropertySource
+2026-06-03T15:32:53.176+03:00  INFO 3264 --- [customer-micro-service] [           main] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource servletContextInitParams [org.springframework.web.context.support.ServletContextPropertySource] to EncryptableEnumerablePropertySourceWrapper
+2026-06-03T15:32:53.345+03:00  INFO 3264 --- [customer-micro-service] [           main] c.o.c.CustomerMicroServiceApplication    : Started CustomerMicroServiceApplication in 11.324 seconds (process running for 11.896)
+2026-06-03T15:33:08.450+03:00  INFO 3264 --- [customer-micro-service] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-03T15:33:08.450+03:00  INFO 3264 --- [customer-micro-service] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-03T15:33:08.451+03:00  INFO 3264 --- [customer-micro-service] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
